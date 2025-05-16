@@ -19,6 +19,8 @@ export class OpenAPIParser {
             }
 
             await SwaggerParser.validate(spec);
+
+            // TODO: check if it is OpenAPI 3.*.*
             return spec as OpenAPIV3.Document;
         } catch (error: any) {
             throw new Error(`Failed to parse OpenAPI spec: ${error.message}`);
