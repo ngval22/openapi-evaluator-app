@@ -51,15 +51,15 @@ export class MiscellaneousRule implements Rule {
     }
 
     // Components reuse (schemas, parameters, responses, etc.)
-    let reused = false;
+    let reused: boolean = false;
     if (spec.components) {
       reused =
-        (spec.components.schemas &&
+        ((spec.components.schemas &&
           Object.keys(spec.components.schemas).length > 1) ||
         (spec.components.parameters &&
           Object.keys(spec.components.parameters).length > 1) ||
         (spec.components.responses &&
-          Object.keys(spec.components.responses).length > 1);
+          Object.keys(spec.components.responses).length > 1)) ?? false;
     }
     if (!reused) {
       violations.push({

@@ -1,5 +1,7 @@
 import { Command } from 'commander';
 import { OpenAPIParser } from './parser';
+import { Judge } from './score-engine';
+import { Announcer } from './announcer';
 
 const program = new Command();
 program
@@ -17,6 +19,12 @@ program
                 console.log(JSON.stringify(apiSpec, null, 2));
                 console.log('\n---\n');
             }
+
+            const judge = new Judge();
+            const report = judge.evaluate(apiSpec);
+
+            const announcer = new Announcer();
+            announcer.generateConsoleReport(report);
         } catch (error: any) {
             console.error(`Error: ${error.message}`);
             process.exit(1);
