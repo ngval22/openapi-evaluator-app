@@ -1,5 +1,6 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { Rule, RuleResult, RuleViolation } from './types';
+import { SEVERITY_SCORE_WEIGHTS } from "./constants";
 
 export class SchemaTypesRule implements Rule {
   name = 'Schema & Types';
@@ -99,9 +100,9 @@ export class SchemaTypesRule implements Rule {
     
     // Weight errors more heavily than warnings and info
     const weightedViolationScore = (
-      (errorViolations * 1.0) + 
-      (warningViolations * 0.5) + 
-      (infoViolations * 0.2)
+      (errorViolations * SEVERITY_SCORE_WEIGHTS.error) + 
+      (warningViolations * SEVERITY_SCORE_WEIGHTS.warning) + 
+      (infoViolations * SEVERITY_SCORE_WEIGHTS.info)
     ) / totalSchemas;
     
     // Calculate final score using a combination of percentage and weighted violations
