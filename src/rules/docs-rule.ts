@@ -1,150 +1,349 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { Rule, RuleResult, RuleViolation } from './types';
+import { RULE_NAMES, RULE_DESCRIPTIONS, CRITERIA_WEIGHTS, SEVERITY_SCORE_WEIGHTS } from "./constants";
 
 export class DescriptionDocsRule implements Rule {
-  name = 'Description & Documentation';
-  description =
-    'All paths, operations, parameters, request bodies, and responses include meaningful description fields.';
-  weight = 20;
+  name = RULE_NAMES.description_docs;   
+  description = RULE_DESCRIPTIONS.description_docs;
+  weight = CRITERIA_WEIGHTS.description_docs;
 
-  evaluate(spec: OpenAPIV3.Document): RuleResult {
-    const violations: RuleViolation[] = [];
-    let totalItems = 0;
-    let itemsWithViolations = 0;
+  // Minimum length for a meaningful description
+    private MIN_DESCRIPTION_LENGTH = 5;
 
-    // Helper to check if a description is meaningful
-    const isMeaningful = (desc?: string) =>
-      typeof desc === 'string' && desc.trim().length >= 8;
+    evaluate(spec: OpenAPIV3.Document): RuleResult {
+        const violations: RuleViolation[] = [];
+        
+        // Track counts for proportional scoring
+        let totalItems = 0;
+        let itemsWithViolations = 0;
 
-    // Check path-level descriptions (OpenAPI 3.1+ supports this)
-    Object.entries(spec.paths || {}).forEach(([path, pathItem]) => {
-      if (!pathItem) return;
-      // PathItemObject may have a description (OpenAPI 3.1+)
-      if ('description' in pathItem) {
+        // Check API info description
         totalItems++;
-        if (!isMeaningful((pathItem as any).description)) {
-          violations.push({
-            path,
-            location: 'path',
-            message: 'Path is missing a meaningful description.',
-            severity: 'warning',
-            suggestion: 'Add a meaningful description to this path.'
-          });
-          itemsWithViolations++;
-        }
-      }
-
-      // Check each operation
-      Object.entries(pathItem)
-        .filter(([k]) =>
-          ['get', 'post', 'put', 'delete', 'patch', 'options', 'head', 'trace'].includes(
-            k
-          )
-        )
-        .forEach(([method, operation]) => {
-          const op = operation as OpenAPIV3.OperationObject;
-          totalItems++;
-          if (!isMeaningful(op.description)) {
+        if (!this.hasValidDescription(spec.info.description)) {
             violations.push({
-              path,
-              operation: method.toUpperCase(),
-              location: 'operation',
-              message: 'Operation is missing a meaningful description.',
-              severity: 'error',
-              suggestion: 'Add a meaningful description to this operation.'
+                path: 'info',
+                location: 'description',
+                message: 'API info is missing a meaningful description',
+                severity: 'error',
+                suggestion: 'Add a detailed description explaining the purpose and usage of the API'
             });
             itemsWithViolations++;
-          }
+        }
 
-          // Parameters
-          (op.parameters || []).forEach((param, idx) => {
+        // Check paths and operations
+        if (spec.paths) {
+            Object.entries(spec.paths).forEach(([pathName, pathItem]) => {
+                if (!pathItem) return;
+
+                // Check path description
+                totalItems++;
+                if (!this.hasValidDescription(pathItem.description)) {
+                    violations.push({
+                        path: pathName,
+                        location: 'description',
+                        message: 'Path is missing a meaningful description',
+                        severity: 'warning',
+                        suggestion: 'Add a description explaining the purpose of this path'
+                    });
+                    itemsWithViolations++;
+                }
+
+                // Check path parameters
+                if (pathItem.parameters) {
+                    this.checkParameters(pathItem.parameters, pathName, undefined, spec, violations, totalItems, itemsWithViolations);
+                }
+
+                // Check operations (GET, POST, etc.)
+                const operations: [string, OpenAPIV3.OperationObject][] = Object.entries(pathItem)
+                    .filter(([key]) => ['get', 'post', 'put', 'delete', 'patch', 'options', 'head', 'trace'].includes(key))
+                    .map(([key, op]) => [key, op as OpenAPIV3.OperationObject]);
+
+                operations.forEach(([method, operation]) => {
+                    // Check operation description
+                    totalItems++;
+                    if (!this.hasValidDescription(operation.description) && !this.hasValidDescription(operation.summary)) {
+                        violations.push({
+                            path: pathName,
+                            operation: method.toUpperCase(),
+                            location: 'description/summary',
+                            message: 'Operation is missing both a meaningful description and summary',
+                            severity: 'error',
+                            suggestion: 'Add a detailed description or at least a summary explaining what this operation does'
+                        });
+                        itemsWithViolations++;
+                    }
+
+                    // Check operation parameters
+                    if (operation.parameters) {
+                        const { newTotalItems, newItemsWithViolations } = this.checkParameters(
+                            operation.parameters, 
+                            pathName, 
+                            method.toUpperCase(), 
+                            spec, 
+                            violations,
+                            totalItems,
+                            itemsWithViolations
+                        );
+                        totalItems = newTotalItems;
+                        itemsWithViolations = newItemsWithViolations;
+                    }
+
+                    // Check request body
+                    if (operation.requestBody) {
+                        const { newTotalItems, newItemsWithViolations } = this.checkRequestBody(
+                            operation.requestBody,
+                            pathName,
+                            method.toUpperCase(),
+                            spec,
+                            violations,
+                            totalItems,
+                            itemsWithViolations
+                        );
+                        totalItems = newTotalItems;
+                        itemsWithViolations = newItemsWithViolations;
+                    }
+
+                    // Check responses
+                    if (operation.responses) {
+                        const { newTotalItems, newItemsWithViolations } = this.checkResponses(
+                            operation.responses,
+                            pathName,
+                            method.toUpperCase(),
+                            spec,
+                            violations,
+                            totalItems,
+                            itemsWithViolations
+                        );
+                        totalItems = newTotalItems;
+                        itemsWithViolations = newItemsWithViolations;
+                    }
+                });
+            });
+        }
+
+        // Check component schemas
+        if (spec.components?.schemas) {
+            Object.entries(spec.components.schemas).forEach(([schemaName, schema]) => {
+                if (this.isSchemaObject(schema)) {
+                    totalItems++;
+                    if (!this.hasValidDescription(schema.description)) {
+                        violations.push({
+                            path: 'components',
+                            location: `schemas.${schemaName}`,
+                            message: 'Schema is missing a meaningful description',
+                            severity: 'warning',
+                            suggestion: 'Add a description explaining the purpose and structure of this schema'
+                        });
+                        itemsWithViolations++;
+                    }
+
+                    // Check properties descriptions if it's an object
+                    if (schema.type === 'object' && schema.properties) {
+                        Object.entries(schema.properties).forEach(([propName, property]) => {
+                            if (this.isSchemaObject(property)) {
+                                totalItems++;
+                                if (!this.hasValidDescription(property.description)) {
+                                    violations.push({
+                                        path: 'components',
+                                        location: `schemas.${schemaName}.properties.${propName}`,
+                                        message: 'Property is missing a meaningful description',
+                                        severity: 'info',
+                                        suggestion: 'Add a description explaining the purpose and expected values of this property'
+                                    });
+                                    itemsWithViolations++;
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        // Calculate proportional score
+        totalItems = Math.max(1, totalItems); // Avoid division by zero
+        const violationPercentage = itemsWithViolations / totalItems;
+        
+        // Apply severity-based weighting
+        const errorViolations = violations.filter(v => v.severity === 'error').length;
+        const warningViolations = violations.filter(v => v.severity === 'warning').length;
+        const infoViolations = violations.filter(v => v.severity === 'info').length;
+        
+        // Weight errors more heavily than warnings and info
+        const weightedViolationPercentage = (
+            (errorViolations * 1.0) + 
+            (warningViolations * 0.5) + 
+            (infoViolations * 0.2)
+        ) / totalItems;
+        
+        // Calculate final score
+        let score = Math.round(this.weight * (1 - weightedViolationPercentage));
+        
+        // Ensure minimum penalty for any errors
+        if (errorViolations > 0 && score > this.weight - 2) {
+            score = this.weight - 2;
+        }
+        
+        // Ensure score doesn't go below 0
+        score = Math.max(0, score);
+
+        return {
+            score,
+            maxScore: this.weight,
+            violations
+        };
+    }
+
+    private hasValidDescription(description?: string): boolean {
+        return !!description && description.trim().length >= this.MIN_DESCRIPTION_LENGTH;
+    }
+
+    private isSchemaObject(schema: any): schema is OpenAPIV3.SchemaObject {
+        return typeof schema === 'object' && !('$ref' in schema);
+    }
+
+    private resolveReference<T>(ref: string, spec: OpenAPIV3.Document): T | undefined {
+        const parts = ref.split('/').slice(1); // Remove the leading '#'
+        
+        let current: any = spec;
+        for (const part of parts) {
+            if (!current[part]) return undefined;
+            current = current[part];
+        }
+        
+        return current as T;
+    }
+
+    private checkParameters(
+        parameters: (OpenAPIV3.ReferenceObject | OpenAPIV3.ParameterObject)[],
+        pathName: string,
+        method: string | undefined,
+        spec: OpenAPIV3.Document,
+        violations: RuleViolation[],
+        totalItems: number,
+        itemsWithViolations: number
+    ): { newTotalItems: number, newItemsWithViolations: number } {
+        let newTotalItems = totalItems;
+        let newItemsWithViolations = itemsWithViolations;
+
+        parameters.forEach(param => {
+            newTotalItems++;
+            
             let paramObj: OpenAPIV3.ParameterObject | undefined;
+            let paramName: string;
+            
             if ('$ref' in param) {
-              const ref = param.$ref;
-              const key = ref.split('/').pop();
-              paramObj = spec.components?.parameters?.[key || ''] as
-                | OpenAPIV3.ParameterObject
-                | undefined;
+                // Resolve parameter reference
+                const refParts = param.$ref.split('/');
+                paramName = refParts[refParts.length - 1];
+                paramObj = this.resolveReference<OpenAPIV3.ParameterObject>(param.$ref, spec);
             } else {
-              paramObj = param as OpenAPIV3.ParameterObject;
+                paramObj = param;
+                paramName = param.name;
             }
-            totalItems++;
-            if (!paramObj || !isMeaningful(paramObj.description)) {
-              violations.push({
-                path,
-                operation: method.toUpperCase(),
-                location: `parameters[${idx}]`,
-                message: 'Parameter is missing a meaningful description.',
-                severity: 'warning',
-                suggestion: 'Add a meaningful description to this parameter.'
-              });
-              itemsWithViolations++;
+            
+            if (paramObj && !this.hasValidDescription(paramObj.description)) {
+                violations.push({
+                    path: pathName,
+                    operation: method,
+                    location: `parameters.${paramName}`,
+                    message: `Parameter '${paramName}' is missing a meaningful description`,
+                    severity: 'warning',
+                    suggestion: 'Add a description explaining the purpose and expected values of this parameter'
+                });
+                newItemsWithViolations++;
             }
-          });
-
-          // Request Body
-          if (op.requestBody) {
-            let reqBody: OpenAPIV3.RequestBodyObject | undefined;
-            if ('$ref' in op.requestBody) {
-              const ref = op.requestBody.$ref;
-              const key = ref.split('/').pop();
-              reqBody = spec.components?.requestBodies?.[key || ''] as
-                | OpenAPIV3.RequestBodyObject
-                | undefined;
-            } else {
-              reqBody = op.requestBody as OpenAPIV3.RequestBodyObject;
-            }
-            totalItems++;
-            if (!reqBody || !isMeaningful(reqBody.description)) {
-              violations.push({
-                path,
-                operation: method.toUpperCase(),
-                location: 'requestBody',
-                message: 'Request body is missing a meaningful description.',
-                severity: 'warning',
-                suggestion: 'Add a meaningful description to this request body.'
-              });
-              itemsWithViolations++;
-            }
-          }
-
-          // Responses
-          Object.entries(op.responses || {}).forEach(([status, resp]) => {
-            let respObj: OpenAPIV3.ResponseObject | undefined;
-            if ('$ref' in resp) {
-              const ref = resp.$ref;
-              const key = ref.split('/').pop();
-              respObj = spec.components?.responses?.[key || ''] as
-                | OpenAPIV3.ResponseObject
-                | undefined;
-            } else {
-              respObj = resp as OpenAPIV3.ResponseObject;
-            }
-            totalItems++;
-            if (!respObj || !isMeaningful(respObj.description)) {
-              violations.push({
-                path,
-                operation: method.toUpperCase(),
-                location: `responses.${status}`,
-                message: `Response ${status} is missing a meaningful description.`,
-                severity: 'warning',
-                suggestion: 'Add a meaningful description to this response.'
-              });
-              itemsWithViolations++;
-            }
-          });
         });
-    });
 
-    // Calculate proportional score
-    const score = Math.round(
-      this.weight * (1 - itemsWithViolations / Math.max(1, totalItems))
-    );
+        return { newTotalItems, newItemsWithViolations };
+    }
 
-    return {
-      score: Math.max(0, score),
-      maxScore: this.weight,
-      violations
-    };
-  }
+    private checkRequestBody(
+        requestBody: OpenAPIV3.ReferenceObject | OpenAPIV3.RequestBodyObject,
+        pathName: string,
+        method: string,
+        spec: OpenAPIV3.Document,
+        violations: RuleViolation[],
+        totalItems: number,
+        itemsWithViolations: number
+    ): { newTotalItems: number, newItemsWithViolations: number } {
+        let newTotalItems = totalItems;
+        let newItemsWithViolations = itemsWithViolations;
+        
+        let requestBodyObj: OpenAPIV3.RequestBodyObject | undefined;
+        
+        if ('$ref' in requestBody) {
+            // Resolve request body reference
+            requestBodyObj = this.resolveReference<OpenAPIV3.RequestBodyObject>(requestBody.$ref, spec);
+        } else {
+            requestBodyObj = requestBody;
+        }
+        
+        if (requestBodyObj) {
+            newTotalItems++;
+            if (!this.hasValidDescription(requestBodyObj.description)) {
+                violations.push({
+                    path: pathName,
+                    operation: method,
+                    location: 'requestBody',
+                    message: 'Request body is missing a meaningful description',
+                    severity: 'warning',
+                    suggestion: 'Add a description explaining the expected structure and purpose of the request body'
+                });
+                newItemsWithViolations++;
+            }
+            
+            // Check content schemas
+            if (requestBodyObj.content) {
+                Object.entries(requestBodyObj.content).forEach(([mediaType, mediaTypeObj]) => {
+                    if (mediaTypeObj.schema) {
+                        // We don't check schema descriptions here as they're covered in the component schemas check
+                        // But we could add specific checks for inline schemas if needed
+                    }
+                });
+            }
+        }
+        
+        return { newTotalItems, newItemsWithViolations };
+    }
+
+    private checkResponses(
+        responses: OpenAPIV3.ResponsesObject,
+        pathName: string,
+        method: string,
+        spec: OpenAPIV3.Document,
+        violations: RuleViolation[],
+        totalItems: number,
+        itemsWithViolations: number
+    ): { newTotalItems: number, newItemsWithViolations: number } {
+        let newTotalItems = totalItems;
+        let newItemsWithViolations = itemsWithViolations;
+        
+        Object.entries(responses).forEach(([statusCode, response]) => {
+            let responseObj: OpenAPIV3.ResponseObject | undefined;
+            
+            if ('$ref' in response) {
+                // Resolve response reference
+                responseObj = this.resolveReference<OpenAPIV3.ResponseObject>(response.$ref, spec);
+            } else {
+                responseObj = response;
+            }
+            
+            if (responseObj) {
+                newTotalItems++;
+                if (!this.hasValidDescription(responseObj.description)) {
+                    violations.push({
+                        path: pathName,
+                        operation: method,
+                        location: `responses.${statusCode}`,
+                        message: `Response ${statusCode} is missing a meaningful description`,
+                        severity: 'error',
+                        suggestion: 'Add a description explaining the meaning of this response and when it occurs'
+                    });
+                    newItemsWithViolations++;
+                }
+            }
+        });
+        
+        return { newTotalItems, newItemsWithViolations };
+    }
 }
