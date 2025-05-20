@@ -1,0 +1,285 @@
+.app-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: sans-serif;
+}
+.main-heading {
+    font-size: 2em; /* Approx Chakra 'xl' */
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+.form-container {
+    border-radius: 0.5rem; /* Chakra 'lg' */
+    padding: 20px;
+    margin-bottom: 30px;
+}
+.tabs-list {
+    display: flex;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 20px;
+}
+.tab-trigger {
+    padding: 10px 15px;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    font-size: 1em;
+    color: #4a5568; /* Chakra gray.600 */
+}
+.tab-trigger-active {
+    border-bottom: 2px solid #3182ce; /* Chakra blue.500 */
+    font-weight: 600;
+    color: #2c5282; /* Chakra blue.700 */
+}
+.tab-content {
+    padding-top: 10px;
+}
+.field-group {
+    margin-bottom: 15px;
+}
+.field-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 0.875em; /* Chakra 'sm' */
+}
+.input-field {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e0; /* Chakra gray.300 */
+    border-radius: 0.375rem; /* Chakra 'md' */
+    box-sizing: border-box;
+    font-size: 1em;
+}
+.input-field[type="file"] {
+    padding: 6px; /* Chakra p="1.5" */
+}
+.submit-button {
+    background-color: #3182ce; /* Chakra blue.500 */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0.375rem; /* Chakra 'md' */
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+    font-size: 1em;
+    font-weight: 500;
+}
+.submit-button:disabled {
+    background-color: #a0aec0; /* Chakra gray.400 */
+    cursor: not-allowed;
+}
+.loading-indicator, .suspense-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+}
+.spinner-text { /* Simple text instead of visual spinner */
+    font-size: 1.1em;
+    margin-bottom: 5px; /* If you had a visual spinner, this would be its text */
+}
+.alert-error {
+    background-color: #fed7d7; /* Chakra red.100 */
+    border: 1px solid #f56565; /* Chakra red.400 */
+    color: #c53030; /* Chakra red.700 */
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 0.375rem; /* Chakra 'md' */
+}
+.alert-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 0.875em; /* Chakra 'sm' */
+    color: #718096; /* Chakra gray.500 */
+}
+.footer-link {
+    color: #3182ce; /* Chakra blue.500 */
+    text-decoration: underline;
+}
+.footer-link:hover {
+    text-decoration: none;
+}
+
+.app-container {
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(30, 41, 59, 0.10);
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+.main-heading {
+  display: none;
+}
+
+.form-container {
+  padding: 0;
+}
+
+.tabs-list {
+  display: none; /* Not shown in the image */
+}
+
+.tab-content {
+  padding: 0;
+}
+
+.field-group {
+  margin: 0;
+}
+
+.field-label {
+  display: none; /* Not shown in the image */
+}
+
+.upload-header {
+  background: #2c3e50;
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  padding: 28px 32px 18px 32px;
+  letter-spacing: 0.01em;
+  border-radius: 18px 18px 0 0;
+}
+
+.upload-instructions {
+  color: #222b45;
+  font-size: 1.08rem;
+  padding: 18px 32px 18px 32px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.upload-dropzone {
+  margin: 0 32px 24px 32px;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  background: #fafbfc;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.upload-dropzone:hover {
+  border-color: #22335a;
+}
+
+.upload-dropzone .remove-file-btn {
+  margin-top: 12px;
+  background: #fff;
+  color: #b91c1c;
+  border: 1px solid #b91c1c;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  padding: 0;
+}
+
+.upload-dropzone .remove-file-btn:hover {
+  background: #ffeaea;
+  color: #a00;
+}
+.upload-icon {
+  font-size: 2.2rem;
+  color: #22335a;
+  margin-bottom: 10px;
+}
+
+.upload-dropzone-text {
+  color: #22335a;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.input-field[type="file"] {
+  display: none;
+}
+
+.submit-button {
+  display: block;
+  width: 160px;
+  margin: 0 auto 32px auto;
+  background: #2b4ea2;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 16px 0;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(30, 41, 59, 0.08);
+}
+
+.submit-button:disabled {
+  background: #bfc8e6;
+  cursor: not-allowed;
+}
+
+.loading-indicator,
+.suspense-fallback {
+  text-align: center;
+  margin: 24px 0;
+}
+
+.spinner-text {
+  color: #22335a;
+  font-size: 1.1rem;
+}
+
+.alert-error {
+  background: #ffeaea;
+  color: #b91c1c;
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin: 24px 32px;
+  font-size: 1rem;
+}
+
+.alert-title {
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+.footer {
+  border-top: 1px solid #f1f1f1;
+  padding: 18px 0 10px 0;
+  text-align: center;
+  color: #7b8794;
+  font-size: 0.98rem;
+  background: #fff;
+}
+
+.footer-link {
+  color: #2b4ea2;
+  text-decoration: underline;
+}
+
+.upload-dropzone.has-file {
+  border-color: #2b4ea2;
+  background: #eaf1ff;
+  transition: border-color 0.2s, background 0.2s;
+}

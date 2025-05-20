@@ -1,0 +1,377 @@
+.report-display-container {
+    padding: 16px;
+    font-family: sans-serif;
+    /* border: 1px solid #d1d5db; */
+    border-radius: 0.375rem;
+}
+
+.scorecard-right {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 200px;
+  gap: 8px;
+  flex-grow: 1; /* Allow it to take available space */
+  min-width: 150px; /* Ensure it has some minimum width */
+}
+
+.segmented-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden; /* Clip segments to rounded corners */
+}
+
+.segment {
+  flex: 1; /* Each segment takes equal width */
+}
+
+.segment.poor {
+  background-color: #ff7f7f; /* Light red/coral */
+}
+
+.segment.fair {
+  background-color: #ffd700; /* Gold/Yellow */
+}
+
+.segment.good {
+  background-color: #58d68d; /* Green */
+}
+
+@media (min-width: 768px) {
+    .report-display-container {
+        padding: 24px;
+    }
+}
+
+.report-heading-h2 {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+}
+@media (min-width: 768px) {
+    .report-heading-h2 {
+        font-size: 1.875rem; /* 30px */
+    }
+}
+
+.report-heading-h3 {
+    font-size: 1.25rem; /* 20px */
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 12px;
+}
+@media (min-width: 768px) {
+    .report-heading-h3 {
+        font-size: 1.5rem; /* 24px */
+    }
+}
+
+/* Custom Progress Bar */
+.progress-bar-track {
+    width: 100%;
+    background-color: #e5e7eb; /* gray-200 */
+    border-radius: 9999px; /* rounded-full */
+    height: 24px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.5s ease-out;
+    text-align: center; /* For potential text inside */
+    color: white; /* For potential text inside */
+    line-height: 24px; /* For potential text inside */
+}
+.progress-bar-fill-green { background-color: #22c55e; /* green-500 */ }
+.progress-bar-fill-yellow { background-color: #ffd700; /* yellow-500 */ }
+.progress-bar-fill-red { background-color: #ef4444; /* red-500 */ }
+
+/* Table */
+.table-container {
+    width: 928px;
+    overflow-x: auto;
+}
+.report-table {
+    max-width: 100%;
+    max-width: 928px;
+    width: 928px;
+    background-color: #ffffff;
+    border-collapse: collapse;
+    border: 1px solid #d1d5db; /* gray-300 */
+}
+.report-table th, .report-table td {
+    padding: 12px 16px;
+    /* border-bottom: 1px solid #e5e7eb; */
+    text-align: left;
+    font-size: 0.875rem; /* 14px */
+}
+.report-table th {
+    background-color: #f9fafb; /* gray-100 */
+    font-weight: 600;
+    color: #374151; /* gray-700 */
+}
+.report-table td {
+    color: #1f2937; /* gray-800 */
+}
+.report-table tbody tr:hover {
+    background-color: #f9fafb; /* gray-50 */
+}
+
+/* Badge */
+.badge {
+    text-align: center;
+    width: 2.5rem;
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 1rem; /* 12px */
+    font-weight: 800;
+    border-radius: 9999px; /* rounded-full */
+    line-height: 1;
+}
+.badge-green { background-color: #22c55e; color: white; }
+.badge-yellow { background-color: #f59e0b; color: #000000; }
+.badge-red { background-color: #ef4444; color: white; }
+.badge-blue { background-color: #3b82f6; color: white; }
+.badge-gray { background-color: #6b7280; color: white; }
+
+
+/* Violations List */
+.violations-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 12px;
+}
+.violations-list-item {
+    max-width: 840px;
+    padding: 16px;
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 0.375rem; /* rounded-md */
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+    margin-bottom: 16px; /* Replaces space-y */
+}
+.violations-list-item:last-child {
+    margin-bottom: 0;
+}
+
+.violation-badge { /* Specific for violation severity badge */
+    margin-bottom: 8px;
+    width: 3.5rem;
+}
+
+.violation-path {
+    font-weight: 600;
+    color: #1f2937; /* gray-800 */
+}
+.violation-code {
+    background-color: #f3f4f6; /* gray-100 */
+    color: #374151; /* gray-700 */
+    padding: 2px 4px;
+    border-radius: 0.25rem; /* rounded */
+    font-size: 0.875rem; /* 14px */
+    font-family: monospace;
+}
+.violation-message {
+    margin-top: 4px;
+    font-size: 0.875rem; /* 14px */
+    color: #374151; /* gray-700 */
+}
+.violation-suggestion {
+    margin-top: 4px;
+    font-size: 0.875rem; /* 14px */
+    color: #166534; /* green-700 */
+}
+.violation-suggestion-label {
+    font-weight: 500;
+}
+
+.no-violations-text {
+    color: #16a34a; /* green-600 */
+    text-align: center;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+
+/* Styles for the animated content wrapper */
+.details-content-wrapper {
+  background-color: #f9f9f9; /* Or set on .details-content-inner */
+  overflow: hidden; /* Crucial for max-height transition */
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s ease-in-out, opacity 0.3s ease-in-out 0.05s;
+  /* Opacity transition can be slightly delayed or timed with max-height */
+}
+
+.details-content-wrapper.open {
+  max-height: 700px;
+  opacity: 1;
+}
+.scrollable-violations-container {
+  max-height: 600px; /* Adjust this value to your desired maximum height */
+  overflow-y: auto; /* Show vertical scrollbar only when content overflows */
+  overflow-x: hidden; /* Optional: Hide horizontal scrollbar if not needed */
+}
+
+/* Optional: Style for the inner content area if needed beyond inline styles */
+.details-content-inner {
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Ensure the TD containing the animated div doesn't interfere */
+.expanded-details-container-row td {
+  padding: 0 !important; /* Override default table cell padding */
+  border: none !important; /* Override default table cell borders */
+}
+
+/* Add a visual cue to the clickable row */
+.clickable-row {
+  cursor: pointer;
+}
+
+/* Optional: Style for when a row is active/expanded */
+.clickable-row[aria-expanded="true"] {
+   background-color: #f0f0f0; /* Example: highlight the active row */
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.scorecard-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+  width: 100%;
+  overflow: hidden;
+}
+
+.scorecard-header {
+  background-color: #2c3e50;
+  color: #ffffff;
+  padding: 15px 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.scorecard-body {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.scorecard-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.circular-progress-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.circular-progress {
+  width: 100%;
+  height: 100%;
+}
+
+.progress-background {
+  fill: none;
+  stroke: #e6e6e6;
+}
+
+.progress-bar {
+  fill: none;
+  stroke: #58d68d; /* Green progress color */
+  stroke-linecap: round; /* Makes the ends of the progress line rounded */
+  stroke-dasharray: 251.2; /* Circumference (2 * PI * R = 2 * 3.14 * 40) */
+  stroke-dashoffset: 60.288; /* 251.2 * (1 - 0.72) for 72% */
+  transition: stroke-dashoffset 0.5s ease-out;
+}
+
+/* Color classes for the progress bar */
+.progress-bar.color-poor {
+  stroke: #ff7f7f; /* Light red/coral */
+}
+.progress-bar.color-fair {
+  stroke: #ffd700; /* Gold/Yellow */
+}
+.progress-bar.color-good {
+  stroke: #58d68d; /* Green */
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #333333;
+}
+
+.score-details {
+  text-align: left;
+}
+
+.score-label {
+  font-size: 0.9em;
+  color: #555555;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.score-value {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #333333;
+}
+
+.bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8em;
+  color: #555555;
+  padding: 0 2px;
+}
+.bar-labels span {
+  flex: 1;
+  text-align: center;
+}
+.bar-labels span:first-child {
+  text-align: left;
+}
+.bar-labels span:last-child {
+  text-align: right;
+}

@@ -1,0 +1,161 @@
+.report-table {
+    max-width: 928px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-radius: 8px;
+  border: none;
+  overflow: hidden;
+}
+
+.report-table th,
+.report-table td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+.report-table th {
+  background: #E5E4E2;
+  font-weight: 600;
+  color: #333;
+  /* border-bottom: 2px solid #e5e7eb; */
+}
+
+.report-table tbody tr {
+  /* border-bottom: 1px solid #f0f0f0; */
+  transition: background 0.2s;
+}
+
+.report-table tbody tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+.report-table tbody tr.clickable-row:hover {
+  background: #f0f6ff;
+  cursor: pointer;
+}
+
+.report-table td {
+  vertical-align: middle;
+}
+
+.percentage-badge {
+  display: inline-block;
+  padding: 0.25em 0.75em;
+  border-radius: 12px;
+  font-size: 0.95em;
+  font-weight: 500;
+  background: #e0f7fa;
+  color: #00796b;
+}
+
+.violation-badge {
+  display: inline-block;
+  padding: 0.2em 0.7em;
+  border-radius: 10px;
+  font-size: 0.85em;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.violation-badge.severity-ERROR {
+  background: #ffebee;
+  color: #c62828;
+}
+.violation-badge.severity-WARNING {
+  background: #fff8e1;
+  color: #f9a825;
+}
+.violation-badge.severity-UNKNOWN {
+  background: #ececec;
+  color: #757575;
+}
+
+.expanded-details-container-row {
+  background: none !important;
+}
+
+.details-content-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.details-content-wrapper.open {
+  max-height: 1000px; /* Large enough for content */
+  transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+
+.details-content-inner {
+  background: #f9f9f9;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  margin: 0;
+  padding: 18px 24px;
+}
+
+.violations-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.violations-list-item {
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  /* border-bottom: 1px solid #ececec; */
+}
+
+.violation-path {
+  font-size: 0.95em;
+  color: #555;
+  margin: 0.2em 0;
+}
+
+.violation-code {
+  background: #f1f1f1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+.violation-message {
+  margin: 0.2em 0 0.4em 0;
+  color: #333;
+}
+
+.violation-suggestion-label {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.scrollable-violations-container {
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.dropdown-arrow {
+  margin-right: 16px;
+}
+
+td h3 {
+  display: inline;
+  margin: 0; /* Optional: remove default margin */
+  vertical-align: middle; /* Optional: align with the icon */
+}
+
+th h3 {
+  display: inline;
+  margin: 0; /* Optional: remove default margin */
+  margin-left: 44px;
+  vertical-align: middle; /* Optional: align with the icon */
+}
+th h4 {
+  display: inline;
+  margin: 0; /* Optional: remove default margin */
+  vertical-align: middle; /* Optional: align with the icon */
+}
+
