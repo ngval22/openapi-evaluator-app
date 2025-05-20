@@ -1,7 +1,7 @@
 import { Command } from 'commander';
-import { OpenAPIParser } from './parser';
-import { Judge } from './score-engine';
-import { Announcer } from './announcer';
+import { OpenAPIParser } from './core/parser';
+import { Judge } from './core/score-engine';
+import { Announcer } from './core/announcer';
 
 const program = new Command();
 program
