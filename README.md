@@ -14,6 +14,17 @@ OpenAPI Evaluator analyzes your OpenAPI specifications and provides detailed fee
 - **CLI Support**: Run evaluations directly from the command line
 - **Multiple Export Formats**: Generate reports in Markdown, HTML, or JSON
 
+## 🏗️ Design Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| **Modular Architecture** | Separates concerns between parsing, rule evaluation, and reporting, making the codebase easier to extend and maintain. |
+| **Rule-based Evaluation** | Each rule is implemented as a separate module, allowing for easy addition of new rules and customization of existing ones. |
+| **Multiple Output Formats** | Supports console, Markdown, HTML, and JSON outputs to accommodate different use cases and integration scenarios. |
+| **WebUI + CLI Modes** | Provides flexibility for both interactive usage via web interface and automated/CI integration via command line. |
+| **Scoring System** | Quantifies API quality through weighted rule categories, providing actionable metrics for improvement. |
+| **Extensible Reporting** | The Announcer pattern allows for easy addition of new report formats without modifying core evaluation logic. |
+
 ## 🛠️ Installation
 
 ### Prerequisites
@@ -139,6 +150,20 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+
+## 📸 Screenshots
+
+### Command Line Output
+![CLI Report](screenshots/cli-report.png)
+
+### HTML Report
+<img src="screenshots/html-report.png" alt="HTML Report" width="700" />
+
+### Web Interface
+| ![Web Interface](screenshots/web-interface.png) |
+|:--:|
+| *Interactive evaluation in the web interface* |
 
 ## 📄 License
 
