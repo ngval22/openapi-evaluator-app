@@ -76,6 +76,7 @@ evaluate(spec: OpenAPIV3.Document): RuleResult {
 
     // Calculate score
     let score = this.weight;
+    console.log("elements with examples/wighout: ", elementsWithExamples, elementsChecked);
     if (elementsChecked > 0) {
         score = Math.round(
             (elementsWithExamples / elementsChecked) * this.weight
