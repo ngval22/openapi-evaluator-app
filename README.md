@@ -67,13 +67,13 @@ npm run cli -- path/to/your/openapi.yaml
 # Using sample file
 npm run cli -- --sample
 
-# Export as Markdown (exported file will be in uploads/ directory in your root folder if not specified explicitly)
+# Export as Markdown (exported file will be in reports/ directory in your root folder if not specified explicitly)
 npm run cli -- path/to/your/openapi.yaml --markdown
 
-# Export as HTML (exported file will be in uploads/ directory in your root folder if not specified explicitly)
+# Export as HTML (exported file will be in reports/ directory in your root folder if not specified explicitly)
 npm run cli -- path/to/your/openapi.yaml --html
 
-# Export as JSON (exported file will be in uploads/ directory in your root folder if not specified explicitly)
+# Export as JSON (exported file will be in reports/ directory in your root folder if not specified explicitly)
 npm run cli -- path/to/your/openapi.yaml --json
 
 # Specify output filename
