@@ -37,7 +37,7 @@ OpenAPI Evaluator analyzes your OpenAPI specifications and provides detailed fee
 Clone the repository and install dependencies:
 
 ```bash
-git clonehttps://github.com/ngval22/openapi-evaluator-app.git 
+git clone https://github.com/ngval22/openapi-evaluator-app.git 
 cd openapi-evaluator-app
 npm install
 ```
