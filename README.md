@@ -1,5 +1,149 @@
-Usage:
+# OpenAPI Evaluator App
 
-npm run dev -- \<spec\> {--debug/-d}
+A powerful tool for evaluating, scoring, and validating OpenAPI specifications against best practices and standards.
 
-Where \<spec\> - is URL or file path pointing to OpenAPI specification.
+## 📋 Overview
+
+OpenAPI Evaluator analyzes your OpenAPI specifications and provides detailed feedback on quality, completeness, and adherence to best practices. It generates comprehensive reports with actionable insights to improve your API documentation.
+
+## 🚀 Features
+
+- **Automated Scoring**: Evaluate OpenAPI specs against multiple rule categories
+- **Detailed Reports**: Get comprehensive feedback on violations and improvement areas
+- **Interactive UI**: Visualize scores and violations in a user-friendly interface
+- **CLI Support**: Run evaluations directly from the command line
+- **Multiple Export Formats**: Generate reports in Markdown, HTML, or JSON
+
+## 🛠️ Installation
+
+### Prerequisites
+
+- Node.js (v12 or higher)
+- npm (v6 or higher)
+
+### Setup
+
+Clone the repository and install dependencies:
+
+```bash
+git clonehttps://github.com/ngval22/openapi-evaluator-app.git 
+cd openapi-evaluator-app
+npm install
+```
+
+## 📊 Usage
+
+### Web UI setup
+
+```bash
+# Build the application
+npm run build
+
+# Start the application
+npm run dev
+```
+
+Then open your browser and you can access the application at: http://localhost:8080/
+
+### Command Line Interface
+
+Evaluate an OpenAPI specification file:
+
+```bash
+# Basic usage
+npm run cli -- path/to/your/openapi.yaml
+
+# Using sample file
+npm run cli -- --sample
+
+# Export as Markdown
+npm run cli -- path/to/your/openapi.yaml --markdown
+
+# Export as HTML
+npm run cli -- path/to/your/openapi.yaml --html
+
+# Export as JSON
+npm run cli -- path/to/your/openapi.yaml --json
+
+# Specify output filename
+npm run cli -- path/to/your/openapi.yaml --html --output my-report
+
+# Specify output directory
+npm run cli -- path/to/your/openapi.yaml --html --output-dir ./reports
+```
+
+### Options
+
+```
+Options:
+  -d, --debug           Print the parsed OpenAPI spec to console
+  --sample              Run the evaluation on a sample OpenAPI specification
+  --markdown            Export the report in Markdown format
+  --json                Export the report in JSON format
+  --html                Export the report in HTML format
+  -o, --output <name>   Specify output filename (without extension)
+  --output-dir <dir>    Specify output directory for reports (default: ./reports)
+  -h, --help            Display help information
+  -v, --version         Display version information
+```
+
+## 🧪 Rule Categories
+
+The evaluator checks your OpenAPI specification against the following rule categories:
+
+- **Documentation**: Completeness of descriptions, summaries, and examples
+- **Path Design**: RESTful design principles and URL structure
+- **Schema Definitions**: Data model completeness and consistency
+- **Response Codes**: Appropriate status codes and error handling
+- **Security**: Authentication and authorization definitions
+- **Examples**: Presence and quality of examples
+- **Miscellaneous**: Other best practices and conventions
+
+## 🖥️ Development
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+This runs both the backend server and frontend development server concurrently.
+
+### Building
+
+```bash
+npm run build
+```
+
+This compiles TypeScript files and bundles the web interface.
+
+### Testing
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with watch mode
+npm run test:watch
+
+# Generate test coverage report
+npm run test:coverage
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 📞 Support
+
+If you encounter any issues or have questions, please file an issue on the GitHub repository or contact me: n.gvalia84@gmail.com
